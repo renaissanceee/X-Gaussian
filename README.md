@@ -1,8 +1,4 @@
-&nbsp;
-
 <div align="center">
-
-<p align="center"> <img src="3d_demo/logo.png" width="110px"> </p>
 
 <h2> Radiative Gaussian Splatting for Efficient X-ray Novel View Synthesis </h2>
 
