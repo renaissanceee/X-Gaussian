@@ -2,7 +2,6 @@ import os
 import torch
 from random import randint
 from utils.loss_utils import l1_loss, ssim
-# from pytorch_msssim import ssim
 from gaussian_renderer import render
 import sys
 from scene import Scene, GaussianModel_Xray

@@ -8,7 +8,7 @@ import torchvision
 from utils.general_utils import safe_state
 from argparse import ArgumentParser
 from arguments import ModelParams, PipelineParams, get_combined_args
-from gaussian_renderer import GaussianModel
+from scene import Scene, GaussianModel_Xray
 
 def render_set(model_path, name, iteration, views, gaussians, pipeline, background):
     render_path = os.path.join(model_path, name, "ours_{}".format(iteration), "renders")
@@ -19,14 +19,14 @@ def render_set(model_path, name, iteration, views, gaussians, pipeline, backgrou
 
     for idx, view in enumerate(tqdm(views, desc="Rendering progress")):
         rendering = render(view, gaussians, pipeline, background)["render"]
-        gt = view.original_image[0:3, :, :]
-        torchvision.utils.save_image(rendering, os.path.join(render_path, '{0:05d}'.format(idx) + ".png"))
-        torchvision.utils.save_image(gt, os.path.join(gts_path, '{0:05d}'.format(idx) + ".png"))
+        gt = view.normalized_image 
+        torchvision.utils.save_image(rendering, os.path.join(render_path, view.image_name + ".png"))
+        torchvision.utils.save_image(gt, os.path.join(gts_path, view.image_name + ".png"))
 
 def render_sets(dataset : ModelParams, iteration : int, pipeline : PipelineParams, skip_train : bool, skip_test : bool):
     with torch.no_grad():
 
-        gaussians = GaussianModel(dataset.sh_degree)
+        gaussians = GaussianModel_Xray(dataset.sh_degree)
         scene = Scene(dataset, gaussians, load_iteration=iteration, shuffle=False)
 
         bg_color = [1,1,1] if dataset.white_background else [0, 0, 0]
